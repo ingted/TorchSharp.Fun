@@ -59,10 +59,8 @@ let makeUnique name names =
         | _::rest -> makeUnique name rest
     makeUnique name (List.sort names)
 
-let registerNamed (parent:#Module) (name,child:#Module) = 
-    if child <> null then 
-        let uname = parent.named_children() |> Seq.map(fun struct(n,_) -> n) |> Seq.toList |> makeUnique name 
-        parent.register_module(uname,child)   
+let uniqueChildName (parent:#Module) (name) = 
+    parent.named_children() |> Seq.map(fun struct(n,_) -> n) |> Seq.toList |> makeUnique name 
     
 ///convert object to IModel if convertible
 let inline M< ^Q when ^Q : (member forward:torch.Tensor->torch.Tensor)>  (mdl:^Q) =
@@ -140,6 +138,10 @@ type FuncModel(name,dependents:(string*Dependent) seq,fwd:torch.Tensor->torch.Te
         member this.forward(t,ts:Args) : (torch.Tensor * Args)= fwdExt(t,ts)
         member this.Module = this :> _         
 
+let sequentialFwd (m1:IModel) (m2:IModel) (t:torch.Tensor) = 
+    use t' = m1.forward(t)
+    m2.forward(t')
+
 let extend (fwd:torch.Tensor->torch.Tensor) = fun (t,ts:Args) -> fwd t,ts
 let notImplFwd (fwd:torch.Tensor) : torch.Tensor = failwith "Not implemented. Call with extended version of fwd that includes Args"
 
@@ -177,18 +179,11 @@ let inline Fx (names:string seq) (dependents:obj seq) fwd =
 let inline (=>>) m1 (n,m2) = 
     let m1 = M m1
     let m2 = M m2 
-    registerNamed m1.Module (n,m2.Module)
-    {new IModel with
-        member _.forward(t) =
-            use t' = m1.forward(t)
-            m2.forward(t')
-        member _.forward(t,ts) =
-            let t',ts' = m1.forward(t,ts)
-            let t2_s = m2.forward(t',ts')
-            t'.Dispose()
-            t2_s
-        member _.Module = m1.Module
-    }
+            
+    let seqFwd = sequentialFwd m1 m2
+    let m1Name = makeUnique (m1.Module.GetName()) [n]
+    new FuncModel("funcModelSeq", [m1Name,toDep m1;n,toDep m2], seqFwd, extend seqFwd) //revised to have a  module that inherits from class Module, for proper 'to' device impl.
+    :> IModel
 
 let inline (->>) m1 m2 =  
     let m1 = M m1

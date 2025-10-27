@@ -10,10 +10,10 @@
     <PackageProjectUrl>https://github.com/fwaris/TorchSharp.Fun</PackageProjectUrl>
     <RepositoryUrl>https://github.com/fwaris/TorchSharpFun</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.90.1</Version>
+    <Version>0.90.3</Version>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PlatformTarget>x64</PlatformTarget>
-    <PackageReleaseNotes>API break! IModel.to'(device) no longer available instead use IModel.Module.to(device) 
+    <PackageReleaseNotes>Fix 'to' device for combinator ->> models; API break! IModel.to'(device) no longer available instead use IModel.Module.to(device) 
 	Upgraded to match changes in TorchSharp 0.105.0; bugfix related to buffers
 	</PackageReleaseNotes>
   </PropertyGroup>
@@ -29,11 +29,11 @@
   <ItemGroup />
 
   <ItemGroup>
-    <PackageReference Include="TorchSharp" Version="0.105.0" />
+    <PackageReference Include="TorchSharp" Version="0.105.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="9.0.201" />
+    <PackageReference Update="FSharp.Core" Version="9.0.303" />
   </ItemGroup>
 
 </Project>
