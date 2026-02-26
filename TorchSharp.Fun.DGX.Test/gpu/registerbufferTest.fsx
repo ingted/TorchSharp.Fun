@@ -1,4 +1,4 @@
-﻿#r "nuget: FAkka.TorchSharp.DGX, 26.1.0-py3.8" 
+﻿#r "nuget: FAkka.TorchSharp.DGX, 26.1.0-py3.9" 
 open TorchSharp
 
 type M1(n) as this =

@@ -1,5 +1,5 @@
 ﻿#r "nuget: FsPickler"
-#r "nuget: FAkka.TorchSharp.DGX, 26.1.0-py3.8" 
+#r "nuget: FAkka.TorchSharp.DGX, 26.1.0-py3.9" 
 #load "../../TorchSharp.Fun.DGX/TorchSharp.Fun.DGX.fs"
 
 open TorchSharp.Fun.DGX

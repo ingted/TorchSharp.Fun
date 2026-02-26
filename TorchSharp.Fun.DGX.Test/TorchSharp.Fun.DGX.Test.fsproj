@@ -28,7 +28,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FAkka.TorchSharp.DGX" Version="26.1.0-py3.8" />
+    <PackageReference Include="FAkka.TorchSharp.DGX" Version="26.1.0-py3.9" />
   </ItemGroup>
 
   <ItemGroup>
